@@ -1,0 +1,44 @@
+/* resetting default spacing*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+/* adding Claire's font's */
+h1, h2, h3 {
+    font-family: "Arial Rounded MT Bold", Arial, sans-serif;
+}
+
+p {
+    font-family: "Avenir", sans-serif;
+    font-weight: 300;
+}
+
+/* started to work on the header, you can add on to it, 
+though I was curious if Claire wanted a full header 
+or a header that's similar to the wireframes */
+.heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px 1px 10px; 
+    border: 1px solid black;
+    background-color:#607196;
+    position: sticky;
+    top: 0;
+
+}
+
+.heading img {
+    width: 100px;
+}
+
+
+
+
+
+
