@@ -18,9 +18,7 @@ p {
     font-weight: 300;
 }
 
-/* started to work on the header, you can add on to it, 
-though I was curious if Claire wanted a full header 
-or a header that's similar to the wireframes */
+
 header {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
