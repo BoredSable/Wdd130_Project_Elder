@@ -7,6 +7,7 @@
 
 body {
     font-family: Arial, sans-serif;
+    background-color: #BABFD1;
 }
 /* adding Claire's font's */
 h1, h2, h3 {
@@ -108,4 +109,45 @@ header nav a:active {
 }
 
 /* note to self add button */
+
+
+
+/****How to Use page CSS**/
+
+#section1 {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 1;
+    height: 40vh;
+    width: 110vw;
+    align-content:center;
+    padding-left: 10%;
+    padding-right: 10%;
+    justify-items: center;
+}
+
+#section2 {
+    display: grid;
+    grid-template-columns: 2fr 2fr;
+    grid-template-rows: 1;
+    height: 40vh;
+    width: 110vw;
+    align-content: center;
+    padding-left: 10%;
+    padding-right: 10%;
+    justify-items: center;
+    
+}
+
+.text {
+    padding-left: 10%;
+    padding-right: 10%;
+    color: #FFC759;
+    background-color: #607196;
+}
+
+.text h3 {
+
+    color: #FF7B9C;
+}
 
