@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StoryWeb – Build Your Own Story</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary:   #607196;
+      --secondary: #BABFD1;
+      --accent1:   #FF7B9C;
+      --accent2:   #FFC759;
+      --light-bg:  #F5F6FA;
+      --text-dark: #2E3148;
+      --text-mid:  #4A4E6A;
+      --text-light:#6B6F8A;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Avenir', 'Nunito Sans', 'Segoe UI', sans-serif;
+      font-weight: 300;
+      color: var(--text-dark);
+      background: #fff;
+    }
+
+
+    header {
+      background: var(--primary);
+      padding: 0 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: 'Arial Rounded MT Bold', 'Nunito Sans', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+
+    .logo span { color: var(--accent1); }
+
+    nav { display: flex; gap: 2rem; }
+
+    nav a {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+
+    nav a:hover, nav a.active { color: var(--accent2); }
+
+
+    .hero {
+      background: var(--light-bg);
+      padding: 5rem 2.5rem 4rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .hero-text h1 {
+      font-family: 'Arial Rounded MT Bold', 'Nunito Sans', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.25;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-text p {
+      font-size: 1rem;
+      color: var(--text-mid);
+      line-height: 1.75;
+      margin-bottom: 2rem;
+    }
+
+    .btn-cta {
+      display: inline-block;
+      background: var(--accent1);
+      color: #fff;
+      padding: 0.75rem 2rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-family: 'Arial Rounded MT Bold', 'Nunito Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-cta:hover { background: #e8607e; transform: translateY(-2px); }
+
+    .hero-image {
+      background: var(--secondary);
+      border-radius: 12px;
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-image svg { width: 64px; height: 64px; opacity: 0.45; }
+
+
+    .section-editor {
+      padding: 4rem 2.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-editor h2 {
+      font-family: 'Arial Rounded MT Bold', 'Nunito Sans', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-editor .subtitle {
+      text-align: center;
+      color: var(--text-light);
+      font-size: 0.95rem;
+      margin-bottom: 3rem;
+    }
+
+    .editor-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+
+    .story-tree {
+      background: var(--light-bg);
+      border: 1px solid var(--secondary);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .story-tree h3 {
+      font-family: 'Arial Rounded MT Bold', 'Nunito Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1.25rem;
+    }
+
+    .tree-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .node {
+      background: #fff;
+      border: 1.5px solid var(--secondary);
+      border-radius: 8px;
+      padding: 0.45rem 1rem;
+      font-size: 0.85rem;
+      color: var(--text-mid);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .node.root {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .node.option {
+      border-color: var(--accent1);
+      color: var(--accent1);
+    }
+
+    .node.sub {
+      background: #fff9f3;
+      border-color: var(--accent2);
+      color: #8a5e00;
+    }
+
+    .connector {
+      width: 2px;
+      height: 18px;
+      background: var(--secondary);
+      margin: 0 auto;
+    }
+
+    .branch-row {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+
+    .branch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .branch-sub {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .edit-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .edit-card {
+      background: #fff;
+      border: 1px solid var(--secondary);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .edit-card label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+
+    .edit-card p {
+      font-size: 0.9rem;
+      color: var(--text-mid);
+      line-height: 1.6;
+    }
+
+    .edit-card textarea {
+      width: 100%;
+      border: 1px solid var(--secondary);
+      border-radius: 6px;
+      padding: 0.6rem 0.8rem;
+      font-family: inherit;
+      font-size: 0.88rem;
+      color: var(--text-dark);
+      resize: vertical;
+      min-height: 80px;
+      background: var(--light-bg);
+      outline: none;
+    }
+
+    .edit-card textarea:focus { border-color: var(--primary); }
+
+    .btn-add {
+      display: inline-block;
+      background: var(--accent2);
+      color: #5a3c00;
+      padding: 0.55rem 1.4rem;
+      border-radius: 20px;
+      font-family: 'Arial Rounded MT Bold', 'Nunito Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.82rem;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-add:hover { background: #f5b430; }
+
+    /* ── HOW TO USE ── */
+    .section-howto {
+      background: var(--light-bg);
+      padding: 4rem 2.5rem;
+    }
+
+    .section-howto-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-howto h2 {
+      font-family: 'Arial Rounded MT Bold', 'Nunito Sans', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .howto-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .howto-card {
+      background: #fff;
+      border: 1px solid var(--secondary);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .howto-img {
+      background: var(--secondary);
+      height: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .howto-img svg { width: 48px; height: 48px; opacity: 0.5; }
+
+    .howto-body { padding: 1.25rem 1.5rem; }
+
+    .howto-body h3 {
+      font-family: 'Arial Rounded MT Bold', 'Nunito Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.6rem;
+    }
+
+    .howto-body p {
+      font-size: 0.88rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+
+    footer {
+      background: var(--primary);
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 1.5rem 2rem;
+      font-size: 0.85rem;
+    }
+
+    footer span { color: var(--accent1); }
+
+    @media (max-width: 720px) {
+      .hero, .editor-layout, .howto-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero { padding: 3rem 1.25rem; }
+      .hero-text h1 { font-size: 1.8rem; }
+      .section-editor, .section-howto { padding: 3rem 1.25rem; }
+      nav { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">Story<span>Web</span></a>
+  <nav>
+    <a href="index.html" class="active">Home</a>
+    <a href="page2.html">Page2</a>
+    <a href="page3.html">Page3</a>
+  </nav>
+</header>
+
+<section style="background: var(--light-bg);">
+  <div class="hero">
+    <div class="hero-text">
+      <h1>Build your own story, with a simple editor</h1>
+      <p>Lorem ipsum dolor sit amet et delectus accommodare his consul copiousae legendos at vix ad putent delectus delicata usu. Vidit dissentiebunt eos cum eum an brute copiousae hendrerit. Eos erant dolorum an. Per facer alfort ut. Mei itaque meritum moderatius cu.</p>
+      <a href="page2.html" class="btn-cta">Create New Story</a>
+    </div>
+    <div class="hero-image">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <polyline points="21 15 16 10 5 21"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="section-editor">
+  <h2>Editor</h2>
+  <p class="subtitle">Organize your story branches visually</p>
+
+  <div class="editor-layout">
+    <div class="story-tree">
+      <h3>Story structure</h3>
+      <div class="tree-wrapper">
+        <div class="node root">story here</div>
+        <div class="connector"></div>
+        <div class="branch-row">
+          <div class="branch">
+            <div class="node option">story option 1</div>
+            <div class="connector"></div>
+            <div class="node sub">story option 1-1</div>
+            <div class="connector"></div>
+            <div class="node sub">story option 1-2</div>
+          </div>
+          <div class="branch">
+            <div class="node option">story option 2</div>
+            <div class="connector"></div>
+            <div class="node sub">story option 2-1</div>
+            <div class="connector"></div>
+            <div class="node sub">story option 2-2 (stories can be connected)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="edit-panel">
+      <div class="edit-card">
+        <label>Add, size, bold, italic, etc. here</label>
+        <p style="font-size:0.8rem; color: var(--text-light);">Select a node to edit its content</p>
+      </div>
+      <div class="edit-card">
+        <label>Edit story node</label>
+        <textarea placeholder="Write your story text here...">Edit more of story here</textarea>
+        <div style="margin-top: 0.75rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <button class="btn-add">+ Add Option</button>
+          <button class="btn-add" style="background: var(--secondary); color: var(--text-mid);">Connect Node</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-howto">
+  <div class="section-howto-inner">
+    <h2>How to use</h2>
+    <div class="howto-grid">
+      <div class="howto-card">
+        <div class="howto-img">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+        <div class="howto-body">
+          <h3>How to use editor</h3>
+          <p>Lorem ipsum dolor sit amet et delectus accommodare his consul copiousae legendos at vix ad putent delectus delicata usu. Vidit dissentiebunt eos cu eum an brute copiousae hendrerit. Eos erant dolorum an. Per facer alfort ut. Mei itaque meritum moderatius cu.</p>
+        </div>
+      </div>
+      <div class="howto-card">
+        <div class="howto-body" style="padding-top: 1.5rem;">
+          <p>Lorem ipsum dolor sit amet et delectus accommodare his consul copiousae legendos at vix ad putent delectus delicata usu. Vidit dissentiebunt eos cu eum an brute copiousae hendrerit. Eos erant dolorum an. Per facer alfort ut. Mei itaque meritum moderatius cu. Sit munere facilis accumsan eu dicat falli consulatu.</p>
+        </div>
+        <div class="howto-img">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  &copy; 2026 <span>StoryWeb</span> &mdash; Claire Elder &middot; WDD 130
+</footer>
+
+</body>
+</html>
